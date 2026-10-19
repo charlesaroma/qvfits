@@ -10,7 +10,7 @@
 |---|---|
 | `styles/quivogue.css` | Quivogue's `css/style.css`, whole and unchanged. The base layer and **the source of every colour token** (`:root`) |
 | `styles/theme.css` | The premium layer: fonts, radii, easing, headings, labels, buttons, the header states, surfaces, forms, skeletons, the marquee band, the full-bleed hero, the bento, the campaign, the product page |
-| `styles/chrome.css` | Logo sizes, the header grid, the mega menu, the search overlay, the phone menu (account, shortcuts, currency, WhatsApp), the signed-in account dropdown, the shop's applied-filter chips, filter sheet and Show more, the product carousel, the newsletter card, the dark footer, the pill inputs and the pill search and sort controls |
+| `styles/chrome.css` | Logo sizes, the header grid, the mega menu, the search overlay, the phone menu (account, shortcuts, currency, WhatsApp), the signed-in account dropdown, the shop's applied-filter chips, filter sheet and Show more, the product carousel, the newsletter card, the footer, the pill inputs and the pill search and sort controls |
 
 After them, `index.css` keeps the `@theme inline` token map (`bg-brand-500`, `text-ink-3`, `rounded-r-lg` …) and a few QVFITS rules: `.input`, `.btn--danger`, the five-column footer, the slider fix in the filter sidebar, and the TV zoom.
 
@@ -110,7 +110,7 @@ Only `transform` and `opacity` animate. `MotionConfig reducedMotion="user"` and 
 
 ## Home page
 
-**Back to the original Quivogue home page** (client request), in its order: hero slideshow (inside the page width, rounded, copy centred over the picture, dots below) · Press (when switched on) · New releases (four cards and a button) · Best sellers (four cards) · Shop by movement (four tiles) · Campaign · Shop the feed · Newsletter (the brand-gradient card with perks, a pill form and two tilted photos). New releases and Best sellers are a **carousel** of the same Quivogue card (`components/storefront/ProductCarousel.jsx`): scroll-snap, four in view on a laptop, two on a tablet, one and a bit on a phone, swipe, arrow keys and round arrow buttons either side of the "See more" link. Every word and picture comes from the Home page module in the admin. The rest of the site keeps the new design.
+**Back to the original Quivogue home page** (client request), in its order: hero slideshow (inside the page width, rounded, copy centred over the picture, dots below) · Press (when switched on) · New releases (four cards and a button) · Best sellers (four cards) · Shop by movement (four tiles) · Campaign · Shop the feed · Newsletter (a light card with perks, a pill form and two tilted photos; the client did not like a purple background). New releases and Best sellers are a **carousel** of the same Quivogue card (`components/storefront/ProductCarousel.jsx`): scroll-snap, four in view on a laptop, two on a tablet, one and a bit on a phone, swipe, arrow keys and round arrow buttons either side of the "See more" link. Every word and picture comes from the Home page module in the admin. The rest of the site keeps the new design.
 
 ## Shop and product page
 

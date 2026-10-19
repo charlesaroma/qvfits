@@ -11,7 +11,7 @@ const DEFAULT_ORDER = ["category", "group:*", "size", "color", "price"];
 /**
  * Every filter in one drawer: from the left on a laptop, a bottom sheet on
  * a phone. It follows the Shop menu: Category, then each "Shop by" group
- * (Movement, and Edits: New in, Best sellers, On sale, Kits), then size,
+ * (Movement, and Edits: New, Best sellers, On sale, Kits), then size,
  * colour and price. Sections fold, follow the admin's order (Catalog,
  * Categories, Filter and sort), and every option says how many it would
  * show. Sorting has its own menu beside the Filter button.
@@ -49,7 +49,7 @@ export default function FilterDrawer({ open, onClose, filters, products, kits, f
         onToggle: (v) => toggle("cats", v),
       };
     } else if (g.kind === "edits") {
-      // The group's items that pick a part of the shop (New in, Best sellers,
+      // The group's items that pick a part of the shop (New, Best sellers,
       // Kits); page links like the size guide aren't filters. On sale joins
       // while the sale runs.
       const items = (facets?.terms ?? []).filter((t) => t.groupId === g.id && LABELS[t.target?.label]).map((t) => ({ value: t.target.label, label: t.name }));

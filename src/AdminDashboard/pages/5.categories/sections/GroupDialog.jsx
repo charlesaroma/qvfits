@@ -7,7 +7,7 @@ import Toggle from "@/AdminDashboard/components/Toggle";
 
 const KINDS = [
   { id: "tags", label: "Tags", hint: "Products can carry several, like Movement or Fit. It gets a filter and its own pages." },
-  { id: "edits", label: "Edits", hint: "Curated links, like New in or Size guide. Nothing to tag on products." },
+  { id: "edits", label: "Edits", hint: "Curated links, like New or Size guide. Nothing to tag on products." },
 ];
 
 /**
@@ -50,7 +50,7 @@ export default function GroupDialog({ value, onChange, onClose, onSave, saving }
           {/* Where It Shows: the Shop menu, the filter drawer, and the shop at all */}
           <div className="grid gap-3 rounded-r-md bg-cream p-4">
             <Toggle checked={g.inMenu} onChange={(inMenu) => set({ inMenu })} label="Show in the Shop menu" hint="A column of its items, in this group's place." />
-            <Toggle checked={g.inFilters} onChange={(inFilters) => set({ inFilters })} label="Show as a shop filter" hint={g.kind === "edits" ? "Its New in, Best sellers, Sale and Kits items become choices in the Filter drawer. Order it under Filter and sort." : "A section of the Filter drawer. Order it under Filter and sort."} />
+            <Toggle checked={g.inFilters} onChange={(inFilters) => set({ inFilters })} label="Show as a shop filter" hint={g.kind === "edits" ? "Its New, Best sellers, Sale and Kits items become choices in the Filter drawer. Order it under Filter and sort." : "A section of the Filter drawer. Order it under Filter and sort."} />
             {g.kind !== "category" && <Toggle checked={g.active} onChange={(active) => set({ active })} label="In the shop" hint="Off hides the whole group, its pages and links; products keep their tags." />}
           </div>
         </div>

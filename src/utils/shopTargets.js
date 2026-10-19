@@ -27,7 +27,7 @@ import { saleOf } from "./stockLevel";
  */
 
 export const LABELS = {
-  new: { name: "New in", slug: "new", badge: "New" },
+  new: { name: "New", slug: "new", badge: "New" },
   bestseller: { name: "Best sellers", slug: "bestsellers", badge: "Bestseller" },
   sale: { name: "Sale", slug: "sale" },
   kits: { name: "Shop the kit", slug: "kits" },

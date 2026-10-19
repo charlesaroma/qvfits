@@ -9,7 +9,7 @@ import Toggle from "@/AdminDashboard/components/Toggle";
 /**
  * Add or edit one item of a group. A category or a tag has a picture and a
  * line that heads its shop page; its web address is made from its name. An
- * edit is a name and what it opens (New in, Bras for running…).
+ * edit is a name and what it opens (New, Bras for running…).
  */
 export default function ItemDialog({ dialog, onChange, onClose, onSave, saving }) {
   const group = dialog?.group;
@@ -28,7 +28,7 @@ export default function ItemDialog({ dialog, onChange, onClose, onSave, saving }
       {/* Edits Item: its link is picked, never typed */}
       {x && group.kind === "edits" && (
         <div className="grid gap-4">
-          <Field label="Name" value={x.name} placeholder="New in" onChange={(e) => set({ name: e.target.value })} autoFocus />
+          <Field label="Name" value={x.name} placeholder="New" onChange={(e) => set({ name: e.target.value })} autoFocus />
           <LinkPicker label="Shows" value={x} onChange={set} />
           <div className="grid gap-3 rounded-r-md bg-cream p-4">
             <Toggle checked={x.active} onChange={(active) => set({ active })} label="In the Shop menu" />

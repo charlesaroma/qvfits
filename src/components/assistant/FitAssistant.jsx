@@ -28,8 +28,20 @@ export default function FitAssistant() {
   const inputRef = useRef(null);
   const sendRef = useRef(null);
 
+  // A new reply opens at its first line, so the shopper reads it from the top (a long outfit reply used to land at its end, with the start scrolled away). Her own message and the typing dots keep the view at the bottom.
   useEffect(() => {
-    bodyRef.current?.scrollTo({ top: bodyRef.current.scrollHeight });
+    const body = bodyRef.current;
+    if (!body) return;
+    const last = messages[messages.length - 1];
+    if (last?.from === "bot" && !ask.isPending) {
+      const turn = [...body.querySelectorAll("[data-turn]")].at(-1);
+      const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+      // Measured from the panel itself, since the turn's offset parent is not the scrolling body.
+      const top = turn ? turn.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop - 12 : body.scrollHeight;
+      body.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
+    } else {
+      body.scrollTo({ top: body.scrollHeight });
+    }
   }, [messages, ask.isPending]);
 
   useEffect(() => {
@@ -128,7 +140,12 @@ export default function FitAssistant() {
         </header>
 
         <div className="asst__body" ref={bodyRef}>
-          {thread.map((m, i) => <AssistantMessage key={i} message={m} onLeave={() => setOpen(false)} onAsk={send} isLast={i === thread.length - 1 && !ask.isPending} />)}
+          {thread.map((m, i) => (
+            // Each turn is its own block, so a reply's top can be found and scrolled to.
+            <div key={i} className="asst__turn" {...(m.from === "bot" && i > 0 ? { "data-turn": true } : {})}>
+              <AssistantMessage message={m} onLeave={() => setOpen(false)} onAsk={send} isLast={i === thread.length - 1 && !ask.isPending} />
+            </div>
+          ))}
           {ask.isPending && (
             <div className="msg msg--bot msg--typing"><span className="typing"><i /><i /><i /></span></div>
           )}

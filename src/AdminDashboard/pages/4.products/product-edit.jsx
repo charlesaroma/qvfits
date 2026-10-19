@@ -223,7 +223,7 @@ function Editor({ existing, products }) {
           {!isKit && (
             <Panel title="Labels" hint="Where else the piece shows.">
               <div className="grid gap-4">
-                <Toggle checked={p.isNew} onChange={(isNew) => patch({ isNew })} label="New arrival" hint="On New in and the home page, until you turn it off." />
+                <Toggle checked={p.isNew} onChange={(isNew) => patch({ isNew })} label="New arrival" hint="On New and the home page, until you turn it off." />
                 <Toggle checked={p.pinnedBestseller} onChange={(pinnedBestseller) => patch({ pinnedBestseller })} label="Pin to Best sellers" hint="Always on Best sellers." />
                 {existing && (
                   <p className="m-0 rounded-r-md bg-cream px-3 py-2 text-[.8rem] text-ink-3">

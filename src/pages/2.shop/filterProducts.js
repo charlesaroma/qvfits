@@ -35,7 +35,7 @@ function pieceFits(p, state, sale, lookup) {
 
 /**
  * The catalogue (and the live kits) in, the grid out. Within a group the
- * choices are OR (Sets or Bras; New in or Kits), across groups AND (Sets
+ * choices are OR (Sets or Bras; New or Kits), across groups AND (Sets
  * in size M). A kit fits a group when one of its pieces does, is priced at
  * the kit price, and is in stock when every piece is.
  */

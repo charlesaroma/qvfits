@@ -18,7 +18,7 @@ import termSeed from "@/data/terms.json";
  *                Edits, and any the admin adds (Categories page)
  *   categories   the Category group's items; a product has one
  *   terms        the items of every other group: tags that products carry
- *                (Running, High support) or edits that open a view (New in)
+ *                (Running, High support) or edits that open a view (New)
  *   colours, sizes, and how the shop's filter sidebar is laid out
  */
 export const categories = createCollection<Category>("categories", categorySeed as Category[], { idPrefix: "cat" });

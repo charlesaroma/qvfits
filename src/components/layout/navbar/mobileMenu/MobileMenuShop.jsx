@@ -9,7 +9,7 @@ import { cn } from "@/utils/cn";
 // A small icon for each group heading and for the "edits" shortcuts, picked by name.
 // Anything unknown falls back to a tag, so a group the admin adds still gets one.
 const GROUP_ICON = { category: Shirt, movement: Activity, edits: Sparkles, fabric: Scissors };
-const LINK_ICON = { "shop everything": LayoutGrid, "new in": Sparkles, "best sellers": Flame, "shop the kit": Layers, "size guide": Ruler };
+const LINK_ICON = { "shop everything": LayoutGrid, "new": Sparkles, "best sellers": Flame, "shop the kit": Layers, "size guide": Ruler };
 
 // "Shop" opens in place with the same groups as the desktop mega menu. Each
 // group is a title and a wrap of pills, so a long list reads as a cloud to

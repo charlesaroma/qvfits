@@ -720,26 +720,28 @@ body:has(.consent) .sticker { opacity: 0; pointer-events: none; visibility: hidd
   display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); align-items: center; gap: clamp(24px, 4vw, 56px);
   padding: clamp(28px, 5vw, 64px);
   border-radius: var(--r-xl);
-  background: var(--brand-grad); color: #fff;
-  box-shadow: 0 24px 60px -28px rgba(93, 39, 102, .65);
+  /* Light, as the footer: a white card with a faint brand tint in the corners, not a purple slab. */
+  background: radial-gradient(520px 320px at 0% 0%, rgba(194, 24, 91, .07), transparent 70%), radial-gradient(520px 360px at 100% 100%, rgba(93, 39, 102, .08), transparent 70%), var(--white);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  box-shadow: var(--sh-1);
 }
 .nl__glow { position: absolute; z-index: -1; border-radius: 50%; pointer-events: none; }
-.nl__glow--a { width: 420px; height: 420px; top: -180px; left: -120px; background: radial-gradient(closest-side, rgba(255, 255, 255, .22), transparent); }
-.nl__glow--b { width: 380px; height: 380px; right: -140px; bottom: -190px; background: radial-gradient(closest-side, rgba(255, 255, 255, .16), transparent); }
+.nl__glow { display: none; }
 .nl__copy { min-width: 0; }
 .nl__kicker {
   display: inline-flex; align-items: center; padding: .4em 1em; margin-bottom: 16px;
-  border-radius: var(--r-pill); background: rgba(255, 255, 255, .16); border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: var(--r-pill); background: var(--brand-100); border: 1px solid var(--brand-200); color: var(--brand-600);
   font-size: .72rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
 }
-.nl__title { margin: 0; color: #fff; font-size: clamp(2rem, 4.4vw, 3.2rem); line-height: 1.04; letter-spacing: -.035em; }
-.nl__text { margin: 14px 0 0; max-width: 46ch; color: rgba(255, 255, 255, .88); font-size: clamp(.98rem, 1.4vw, 1.1rem); line-height: 1.55; }
+.nl__title { margin: 0; color: var(--ink); font-size: clamp(2rem, 4.4vw, 3.2rem); line-height: 1.04; letter-spacing: -.035em; }
+.nl__text { margin: 14px 0 0; max-width: 46ch; color: var(--ink-3); font-size: clamp(.98rem, 1.4vw, 1.1rem); line-height: 1.55; }
 .nl__perks { list-style: none; margin: 24px 0 28px; padding: 0; display: grid; gap: 12px; }
-.nl__perks li { display: flex; align-items: center; gap: 12px; font-size: .95rem; color: rgba(255, 255, 255, .92); }
-.nl__perks strong { color: #fff; font-weight: 700; }
+.nl__perks li { display: flex; align-items: center; gap: 12px; font-size: .95rem; color: var(--ink-3); }
+.nl__perks strong { color: var(--ink); font-weight: 700; }
 .nl__perk-icon {
   display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 50%;
-  background: rgba(255, 255, 255, .16); border: 1px solid rgba(255, 255, 255, .26);
+  background: var(--brand-100); border: 1px solid var(--brand-200); color: var(--brand-600);
 }
 /* Two overlapping shots, one tilted each way. */
 .nl__art { position: relative; min-height: clamp(280px, 34vw, 440px); }
@@ -888,8 +890,13 @@ body:has(.consent) .sticker { opacity: 0; pointer-events: none; visibility: hidd
 .ftr__lede { margin: 16px 0 0; max-width: 44ch; font-size: 1.05rem; line-height: 1.55; color: var(--ink-3); }
 .ftr--light .news__form { max-width: none; }
 /* On white the field needs its own outline, and the button sits close beside it. */
-.ftr--light .news__form input { background: var(--white); border: 1.5px solid var(--line-2); border-radius: var(--r-pill); padding-inline: 1.3em; }
-.ftr--light .news__form .btn { flex: none; }
+.ftr--light .news__form input,
+.nl .news__form input { background: var(--white); border: 1.5px solid var(--line-2); border-radius: var(--r-pill); padding-inline: 1.3em; }
+.ftr--light .news__form .btn,
+.nl .news__form .btn { flex: none; }
+/* Left aligned with the words above it, not centred. */
+.nl .news__form { margin-inline: 0; max-width: 480px; }
+.nl .news__msg { text-align: left; }
 .news__form--pill input::placeholder { color: var(--ink-4); opacity: 1; }
 
 /* Columns */
@@ -983,3 +990,7 @@ select.input, .field select, select.select { padding-right: 2.75rem; }
 .asst__quick button:hover { background: var(--brand-100); transform: translateY(-1px); }
 .asst__forget { padding: 0; border: 0; background: none; color: var(--ink-3); font-size: inherit; text-decoration: underline; }
 .asst__forget:hover { color: var(--brand-600); }
+
+/* One turn of the Vee chat: same stacking as the panel, so spacing is unchanged and the turn can be scrolled to. */
+.asst__turn { display: flex; flex-direction: column; gap: 12px; }
+.asst__turn:empty { display: none; }

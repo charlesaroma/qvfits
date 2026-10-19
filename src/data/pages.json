@@ -5,7 +5,7 @@
     "seo": "Every QVFITS piece in the shop right now: seamless and seam-fit activewear, swim and lounge wear.",
     "titles": {
       "all": "Shop everything",
-      "New": "New in",
+      "New": "New",
       "Bestseller": "Best sellers",
       "sale": "The sale",
       "search": "Results for \u201c{query}\u201d"
@@ -21,7 +21,21 @@
       "saleTitle": "The sale isn't running right now",
       "saleText": "Nothing is reduced at the moment. The full range is still here, and Vee can point you at it."
     },
-    "dealsWhatsapp": "Hi QVFITS! What's on offer this week?"
+    "dealsWhatsapp": "Hi QVFITS! What's on offer this week?",
+    "views": {
+      "new": {
+        "kicker": "Just landed",
+        "lede": "The newest pieces to reach the shop, freshest first."
+      },
+      "bestseller": {
+        "kicker": "Most loved",
+        "lede": "What shoppers keep coming back for, ranked by real sales."
+      },
+      "sale": {
+        "kicker": "For now",
+        "lede": "Pieces marked down while the sale runs. When it ends they go back to full price."
+      }
+    }
   },
   "product": {
     "fitHelp": "Not sure? The size guide has the full measurement chart, or Vee will work it out from your measurements.",

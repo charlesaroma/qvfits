@@ -8,8 +8,8 @@ import NewsletterForm from "@/components/storefront/NewsletterForm";
 const PERK_ICON = { sparkles: Sparkles, bell: Bell, gift: Gift };
 
 /**
- * The reason to join, on the brand gradient: what a subscriber gets, the
- * form in one white pill, and two of the shop's own photos beside it. Joining
+ * The reason to join, on a light card: what a subscriber gets, the
+ * form as a pill, and two of the shop's own photos beside it. Joining
  * is double opt-in: the address is on the list once the emailed link is
  * opened (NewsletterForm). The words are in src/data/home.json; `photos`
  * are the campaign and a hero shot.
@@ -21,10 +21,6 @@ export default function Newsletter({ copy, photos = [] }) {
     <section className="section section--tight" id="newsletter">
       <div className="wrap">
         <Reveal className="nl">
-          {/* Soft light behind the copy, so the gradient isn't flat */}
-          <span className="nl__glow nl__glow--a" aria-hidden="true" />
-          <span className="nl__glow nl__glow--b" aria-hidden="true" />
-
           {/* Words, perks and the form */}
           <div className="nl__copy">
             <span className="nl__kicker">{copy.kicker}</span>
@@ -41,7 +37,7 @@ export default function Newsletter({ copy, photos = [] }) {
                 );
               })}
             </ul>
-            <NewsletterForm source="home" formId="newsForm" placeholder={copy.placeholder} cta={copy.cta} tone="brand" />
+            <NewsletterForm source="home" formId="newsForm" placeholder={copy.placeholder} cta={copy.cta} />
           </div>
 
           {/* Two shots, overlapping and tilted, from the shop's own shoot */}

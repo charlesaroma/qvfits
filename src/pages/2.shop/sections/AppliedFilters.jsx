@@ -16,7 +16,7 @@ export default function AppliedFilters({ filters, facets }) {
 
   const catName = (id) => facets?.categoryList.find((c) => c.id === id)?.name ?? id;
   const termName = (id) => facets?.terms.find((t) => t.id === id)?.name ?? id;
-  // An Edit is called what the admin named its item (New in, Best sellers, Kits).
+  // An Edit is called what the admin named its item (New, Best sellers, Kits).
   const labelName = (l) => facets?.terms.find((t) => t.target?.label === l)?.name ?? (l === "sale" ? "On sale" : LABELS[l]?.name ?? l);
   const price =
     state.minPrice && state.maxPrice ? `${money(state.minPrice)} to ${money(state.maxPrice)}`

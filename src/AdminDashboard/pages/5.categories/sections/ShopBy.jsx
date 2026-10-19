@@ -25,7 +25,7 @@ import ItemDialog from "./ItemDialog";
  * The storefront's "Shop by" groups and their items, one card each, in the
  * order the Shop menu shows them. Category is the shop's own group (a
  * product has one); the others are tags (a product can have several) or
- * edits (curated links such as New in). Any group can be added.
+ * edits (curated links such as New). Any group can be added.
  */
 export default function ShopBy() {
   const groups = useCollection(groupsResource);

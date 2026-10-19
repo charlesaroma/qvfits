@@ -49,7 +49,7 @@ export interface SizeOption {
  * admin adds (Fit, Support). The kind decides what its items are:
  *   category  the categories table; a product has exactly one (categoryId)
  *   tags      terms that products carry any number of (termIds)
- *   edits     terms that are curated views (New in, Size guide), each a target
+ *   edits     terms that are curated views (New, Size guide), each a target
  */
 export type GroupKind = "category" | "tags" | "edits";
 
@@ -68,7 +68,7 @@ export interface ShopGroup {
   active: boolean;
 }
 
-/** An item in a tags or edits group: Running, High support, New in. */
+/** An item in a tags or edits group: Running, High support, New. */
 export interface Term {
   id: Id;
   groupId: Id;

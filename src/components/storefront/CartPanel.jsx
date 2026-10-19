@@ -29,7 +29,7 @@ export default function CartPanel() {
           <EmptyState icon={ShoppingBag}>Your bag is empty. Let&apos;s fix that.</EmptyState>
         </div>
         <div className="drawer__foot">
-          <Link className="btn btn--primary btn--block" to="/shop/new">Shop new in</Link>
+          <Link className="btn btn--primary btn--block" to="/shop/new">Shop new</Link>
         </div>
       </>
     );
