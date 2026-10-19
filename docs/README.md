@@ -42,6 +42,8 @@ Delivery is 15 working days (proposal QV-2026-001).
 | 8 | DigitalOcean deploy | `06-deployment.md` | 2 to 3, 15 | pending |
 | 9 | QA, client review, launch | none | 12 to 15 | pending |
 
+Vee's roadmap and the advice not yet applied: `08-vee-roadmap.md`.
+
 **Blocking launch (client):**
 
 - All 16 prices, delivery fees, the exchange window (7 days, in Settings) and showroom hours are still placeholders.
