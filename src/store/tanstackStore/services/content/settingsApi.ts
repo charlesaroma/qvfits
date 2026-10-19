@@ -16,13 +16,20 @@ import settingsSeed from "@/data/settings.json";
  */
 const settings = createDocument<ShopSettings>("settings", settingsSeed as ShopSettings);
 
+// A copy saved before Vee had a tone or colour pairs has neither key; it gets the starter ones until the team saves its own (an emptied list is kept as emptied).
+const seededAssistant = (settingsSeed as ShopSettings).assistant;
+const withVeeDefaults = (doc: ShopSettings): ShopSettings => ({
+  ...doc,
+  assistant: { ...doc.assistant, tone: doc.assistant.tone ?? seededAssistant.tone, pairing: doc.assistant.pairing ?? seededAssistant.pairing },
+});
+
 /** The document plus the live delivery zones. */
 export function getSettings({ signal }: RequestOptions = {}) {
-  return mockApi<ShopSettings>(() => ({ ...settings.get(), zones: activeZones() }), 100, signal);
+  return mockApi<ShopSettings>(() => ({ ...withVeeDefaults(settings.get()), zones: activeZones() }), 100, signal);
 }
 
 /** Read synchronously by other services (checkout, inventory alerts). */
-export const readSettings = () => settings.get();
+export const readSettings = () => withVeeDefaults(settings.get());
 
 export function updateSettings(patch: DocumentPatch<ShopSettings>) {
   return mockApi<ShopSettings>(() => {

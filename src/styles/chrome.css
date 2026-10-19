@@ -876,96 +876,70 @@ body:has(.consent) .sticker { opacity: 0; pointer-events: none; visibility: hidd
 .mmenu__wa:hover { background: var(--brand-200); }
 .mmenu__waicon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #fff; color: #1fa855; }
 
-/* ---------------------------------------------------------------- dark footer */
-.ftr--dark {
-  --ftr-bg: color-mix(in srgb, #5d2766 34%, #0d0610);
-  position: relative; overflow: hidden; isolation: isolate; margin-top: clamp(48px, 7vw, 96px); padding-bottom: 0;
-  background: radial-gradient(900px 420px at 12% -10%, rgba(194, 24, 91, .32), transparent 70%), radial-gradient(800px 460px at 100% 0%, rgba(93, 39, 102, .55), transparent 70%), var(--ftr-bg);
-  border-top: 0; color: rgba(255, 255, 255, .72);
-}
-.ftr--dark a { color: rgba(255, 255, 255, .74); }
-.ftr--dark a:hover { color: #fff; }
-.ftr--dark .ftr__title { color: rgba(255, 255, 255, .5); }
-.ftr--dark .ftr__grid { grid-template-columns: 1.5fr repeat(3, 1fr); gap: clamp(28px, 4vw, 56px); }
-
-/* The logo's own words are a brand gradient; on dark they go white. */
-.logo--dark .logo__name { background: none; -webkit-text-fill-color: #fff; color: #fff; }
-.logo--dark .logo__sub, .logo--dark .logo__sub span { color: rgba(255, 255, 255, .7); }
+/* ---------------------------------------------------------------- footer */
+/* The old light background (white, one hairline above), with the newer layout:
+   the newsletter leads, then the columns, then the bottom bar. */
+.ftr--light { position: relative; overflow: hidden; isolation: isolate; margin-top: clamp(48px, 7vw, 96px); padding-bottom: 0; background: var(--white); border-top: 1px solid var(--line); }
 
 /* Newsletter at the top */
-.ftr__join { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 28px clamp(32px, 6vw, 88px); align-items: center; padding-bottom: clamp(36px, 5vw, 64px); margin-bottom: clamp(36px, 5vw, 64px); border-bottom: 1px solid rgba(255, 255, 255, .12); }
-.ftr__eyebrow { margin: 0 0 14px; font-size: .74rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: #f08ab5; }
-.ftr__headline { margin: 0; color: #fff; font-size: clamp(2.3rem, 5.4vw, 4.2rem); line-height: 1; letter-spacing: -.04em; }
-.ftr__lede { margin: 16px 0 0; max-width: 44ch; font-size: 1.05rem; line-height: 1.55; color: rgba(255, 255, 255, .7); }
-.ftr--dark .news__form--pill { max-width: none; box-shadow: 0 0 0 4px rgba(255, 255, 255, .08); }
+.ftr__join { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 28px clamp(32px, 6vw, 88px); align-items: center; padding-bottom: clamp(36px, 5vw, 64px); margin-bottom: clamp(36px, 5vw, 64px); border-bottom: 1px solid var(--line); }
+.ftr__eyebrow { margin: 0 0 14px; font-size: .74rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--brand-600); }
+.ftr__headline { margin: 0; font-size: clamp(2.3rem, 5.4vw, 4.2rem); line-height: 1; letter-spacing: -.04em; }
+.ftr__lede { margin: 16px 0 0; max-width: 44ch; font-size: 1.05rem; line-height: 1.55; color: var(--ink-3); }
+.ftr--light .news__form { max-width: none; }
+/* On white the field needs its own outline, and the button sits close beside it. */
+.ftr--light .news__form input { background: var(--white); border: 1.5px solid var(--line-2); border-radius: var(--r-pill); padding-inline: 1.3em; }
+.ftr--light .news__form .btn { flex: none; }
 .news__form--pill input::placeholder { color: var(--ink-4); opacity: 1; }
-.ftr--dark .nl__fine { font-size: .78rem; color: rgba(255, 255, 255, .55); }
-.ftr--dark .nl__fine a, .ftr--dark .news__msg--brand a { color: #fff; }
 
 /* Columns */
-.ftr__blurb { max-width: 36ch; margin: 0; font-size: .95rem; line-height: 1.6; color: rgba(255, 255, 255, .66); }
+.ftr--light .ftr__grid { grid-template-columns: 1.5fr repeat(3, 1fr); gap: clamp(28px, 4vw, 56px); }
+.ftr__blurb { max-width: 36ch; margin: 0; font-size: .95rem; line-height: 1.6; color: var(--ink-3); }
 .ftr .ftr__social { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
-.ftr--dark .ftr__social a { border-color: rgba(255, 255, 255, .22); background: rgba(255, 255, 255, .06); color: #fff; }
-.ftr--dark .ftr__social a:hover { background: var(--brand-grad); border-color: transparent; transform: translateY(-3px); }
-.ftr--dark ul a:not(.ftr__social a) { transition: color .2s, transform .2s var(--ease); }
-.ftr--dark nav ul a:hover { transform: translateX(3px); }
+.ftr--light nav ul a { transition: color .2s, transform .2s var(--ease); }
+.ftr--light nav ul a:hover { transform: translateX(3px); }
 
 /* Visit: icon column plus text */
 .ftr__visit { gap: 14px; }
 .ftr__visit li { display: grid; grid-template-columns: 18px 1fr; gap: 12px; align-items: start; font-size: .92rem; }
-.ftr__visit li > svg, .ftr__vi { width: 18px; height: 18px; margin-top: 3px; color: #f08ab5; }
-.ftr--dark .ftr__visit a { min-height: 0; display: block; line-height: 1.5; }
-.ftr__note { display: block; font-size: .82rem; color: rgba(255, 255, 255, .5); }
+.ftr__visit li > svg, .ftr__vi { width: 18px; height: 18px; margin-top: 3px; color: var(--brand-500); }
+.ftr--light .ftr__visit a { min-height: 0; display: block; line-height: 1.5; }
+.ftr__note { display: block; font-size: .82rem; color: var(--ink-4); }
 
 /* Bottom bar */
-.ftr--dark .ftr__bot { margin-top: clamp(40px, 5vw, 64px); border-top-color: rgba(255, 255, 255, .12); color: rgba(255, 255, 255, .5); align-items: center; padding-bottom: 8px; }
+.ftr--light .ftr__bot { margin-top: clamp(40px, 5vw, 64px); align-items: center; padding-bottom: 24px; }
 .ftr__legal { display: flex; flex-wrap: wrap; gap: 6px 22px; }
-.ftr--dark .ftr__legal a, .ftr--dark .ftr__cookie { min-height: 0; font-size: .78rem; color: rgba(255, 255, 255, .62); }
-.ftr--dark .ftr__cookie:hover { color: #fff; }
-
-/* The wordmark */
-.ftr__mark {
-  display: block; margin-top: clamp(8px, 2vw, 24px); text-align: center; user-select: none; pointer-events: none;
-  font-family: var(--display); font-weight: 800; letter-spacing: -.04em; line-height: .78; white-space: nowrap;
-  font-size: clamp(4.5rem, 21vw, 21rem); transform: translateY(14%);
-  background: linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, 0) 85%);
-  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
-}
+.ftr--light .ftr__legal a, .ftr--light .ftr__cookie { min-height: 0; font-size: .78rem; color: var(--ink-3); }
+.ftr--light .ftr__cookie:hover { color: var(--brand-600); }
 
 @media (max-width: 900px) {
   .ftr__join { grid-template-columns: 1fr; }
-  .ftr--dark .ftr__grid { grid-template-columns: 1fr 1fr; }
-  .ftr--dark .ftr__brand, .ftr--dark .ftr__grid > :last-child { grid-column: 1 / -1; }
+  .ftr--light .ftr__grid { grid-template-columns: 1fr 1fr; }
+  .ftr--light .ftr__brand, .ftr--light .ftr__grid > :last-child { grid-column: 1 / -1; }
 }
 @media (max-width: 440px) {
-  .ftr--dark .ftr__grid { grid-template-columns: 1fr 1fr; gap: 28px 18px; }
-  .ftr--dark .ftr__bot { flex-direction: column; align-items: flex-start; }
+  .ftr--light .ftr__grid { grid-template-columns: 1fr 1fr; gap: 28px 18px; }
+  .ftr--light .ftr__bot { flex-direction: column; align-items: flex-start; }
 }
-
-/* Show more, under the shop grid */
-.showmore { display: grid; justify-items: center; gap: 12px; margin-top: clamp(32px, 5vw, 56px); }
-.showmore__count { margin: 0; font-size: .9rem; color: var(--ink-3); font-variant-numeric: tabular-nums; }
-.showmore__bar { width: min(260px, 70%); height: 4px; border-radius: 999px; background: var(--line-2); overflow: hidden; }
-.showmore__bar span { display: block; height: 100%; border-radius: inherit; background: var(--brand-grad); transition: width .4s var(--ease); }
 
 /* Footer on a phone: centred, the way a narrow dark footer usually reads, with tighter link rows. */
 @media (max-width: 600px) {
   .ftr__join { text-align: center; }
   .ftr__lede { margin-inline: auto; }
-  .ftr--dark .ftr__grid { text-align: center; gap: 30px 16px; }
-  .ftr--dark .ftr__brand { display: grid; justify-items: center; }
-  .ftr--dark .ftr__brand .logo { margin-inline: auto; }
+  .ftr--light .ftr__grid { text-align: center; gap: 30px 16px; }
+  .ftr--light .ftr__brand { display: grid; justify-items: center; }
+  .ftr--light .ftr__brand .logo { margin-inline: auto; }
   .ftr__blurb { margin-inline: auto; }
   .ftr .ftr__social { justify-content: center; }
   /* Touch rows: 40px is easy to hit and stops two short lists towering over the page. */
-  .ftr--dark ul a { min-height: 40px !important; justify-content: center; }
-  .ftr--dark nav ul a:hover { transform: none; }
+  .ftr--light ul a { min-height: 40px !important; justify-content: center; }
+  .ftr--light nav ul a:hover { transform: none; }
   /* Each showroom line: its icon above, the words centred under it. */
   .ftr__visit { gap: 18px; }
   .ftr__visit li { display: flex; flex-direction: column; align-items: center; gap: 6px; }
   .ftr__visit li > svg, .ftr__vi { margin-top: 0; }
   .ftr__note { text-align: center; }
-  .ftr--dark .ftr__bot { align-items: center; text-align: center; gap: 10px; }
+  .ftr--light .ftr__bot { align-items: center; text-align: center; gap: 10px; }
   .ftr__legal { justify-content: center; }
 }
 

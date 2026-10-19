@@ -2,7 +2,7 @@
 import { anyInStock, inStock, productSizes } from "@/utils/stockLevel";
 import { findSize } from "@/utils/sizing";
 import { who, type VeeContext } from "./context";
-import { cards, chips, link, sizeGapLine, stockLine, text, ugx, type Block } from "./helpers";
+import { cards, chips, link, sizeGapLine, stockLine, text, ugx, whatsappBlock, type Block } from "./helpers";
 import { findBudget, findCategory, findColors, findMeasurements, findMovement, findProduct, has, words } from "./language";
 import { giftPicks, movementLook } from "./looks";
 import { askActivity, outfitReply, refinement, remember, setsReply } from "./outfitReply";
@@ -24,7 +24,12 @@ export function reply(raw: string, ctx: VeeContext): Block[] {
   const pending = session.pendingOutfit;
   session.pendingOutfit = false;
   session.serious = /\bfit\b/.test(t) || has(t, ["delivery", "ship", "return", "exchange", "refund", "pay", "price", "cost", "size", "order", "wrong", "broken", "damaged", "complain", "angry", "late", "stock"]);
-  const team = link("Message the team on WhatsApp", `https://wa.me/${s.whatsapp}`, true);
+  const team = whatsappBlock(
+    "Message Admin on WhatsApp",
+    "Direct WhatsApp chat with our studio team in Kampala",
+    "Hi QVfits team, I was chatting with Vee and would like to speak to a person.",
+    s.whatsapp
+  );
 
   /* Names */
   if (session.awaitingName) {
@@ -46,8 +51,41 @@ export function reply(raw: string, ctx: VeeContext): Block[] {
   }
 
   /* People, greetings, thanks */
-  if (has(t, ["human", "real person", "someone else", "talk to a person", "agent", "manager", "speak to"])) {
-    return [text(`Of course${who(ctx)}. The team answers fastest on WhatsApp, or come and try things on at ${s.address}.`), team];
+  if (
+    has(t, [
+      "human",
+      "real person",
+      "someone else",
+      "talk to a person",
+      "talk to human",
+      "talk to admin",
+      "chat with admin",
+      "speak to someone",
+      "speak to a person",
+      "speak with someone",
+      "agent",
+      "manager",
+      "admin",
+      "whatsapp",
+      "customer care",
+      "customer service",
+      "reach admin",
+      "talk to a real",
+      "speak to human",
+      "contact admin",
+    ])
+  ) {
+    return [
+      text(`Of course${who(ctx)}! You can chat directly with our team on WhatsApp, or come try things on in person at ${s.address}.`),
+      whatsappBlock(
+        "Chat with Admin on WhatsApp",
+        "Direct line for personal styling, sizing & order assistance",
+        session.lastSubject
+          ? `Hi QVfits team, I was asking Vee about the ${session.lastSubject.name} and would like to speak to a person.`
+          : `Hi QVfits team, I was chatting with Vee and would like to speak to a human.`,
+        s.whatsapp
+      ),
+    ];
   }
   if (/^(hi|hey|hello|yo|hola|good (morning|afternoon|evening))\b/.test(t) && t.length < 30) {
     if (!session.name) {
@@ -142,8 +180,14 @@ export function reply(raw: string, ctx: VeeContext): Block[] {
     if (session.lastAsk) return outfitReply(ctx, session.lastAsk as never);
     return [text(`Got it${who(ctx)}: ${session.size}. I will only show pieces in stock in ${session.size} from now on.`), chips("Build me an outfit", "Something for the gym", "Under 150k")];
   }
-  // She was just asked what she is dressing for; her answer is the activity.
-  if (pending && findMovement(t)) return outfitReply(ctx, { movement: findMovement(t), budget: findBudget(t) ?? session.budget, colors: session.colors });
+  // She was just asked what she is dressing for; her answer is the activity or a colour.
+  if (pending) {
+    const mov = findMovement(t);
+    const cols = findColors(t, ctx.swatches);
+    if (mov || cols.length) {
+      return outfitReply(ctx, { movement: mov, budget: findBudget(t) ?? session.budget, colors: cols.length ? cols : session.colors });
+    }
+  }
   if (has(t, ["gift", "present", "for my sister", "for my friend", "for her", "birthday for"])) return giftPicks(t, ctx);
   // A short follow-up on the last outfit ("in black", "bolder", "under 150k") changes it.
   const again = refinement(t, ctx);
@@ -151,7 +195,13 @@ export function reply(raw: string, ctx: VeeContext): Block[] {
   // A set is one matching piece; offered before building from separates.
   const setWord = /\b(sets?|co-?ords?|two[- ]piece|matching)\b/.test(t);
   if (setWord && !has(t, ["kit", "outfit", "goes with", "go with"]) && !findProduct(t, products) && !findMovement(t)) return setsReply(ctx);
-  if (has(t, ["goes with", "go with", "pair", "style it", "style this", "outfit", "what should i wear", "what to wear", "build a look", "build me", "put together", "match", "kit", "complete the look", "complete my"])) {
+  if (
+    has(t, [
+      "goes with", "go with", "pair", "style it", "style this", "outfit", "outfits",
+      "what should i wear", "what to wear", "build a look", "build me", "put together",
+      "match", "kit", "kits", "complete the look", "complete my", "all black", "all white"
+    ])
+  ) {
     const colors = findColors(t, ctx.swatches);
     // "my black legging": something she owns, found by the words she used.
     const subject = findProduct(t, products) ?? (has(t, ["my ", "this", "that", "it"]) ? search(t, ctx).items[0] ?? session.lastSubject : session.lastSubject);
@@ -160,7 +210,10 @@ export function reply(raw: string, ctx: VeeContext): Block[] {
       session.lastSubject = subject;
       return outfitReply(ctx, { subject, movement: occ, budget: findBudget(t) ?? session.budget, colors: colors.length ? colors : session.colors, baseColor: has(t, ["my "]) ? colors[0] ?? null : null });
     }
-    if (occ) return outfitReply(ctx, { movement: occ, budget: findBudget(t) ?? session.budget, colors: colors.length ? colors : session.colors });
+    // If an activity was specified OR a colour was named ("outfit in black", "black outfit"), build the outfit immediately!
+    if (occ || colors.length) {
+      return outfitReply(ctx, { movement: occ, budget: findBudget(t) ?? session.budget, colors: colors.length ? colors : session.colors });
+    }
     return askActivity(ctx);
   }
 
@@ -196,5 +249,16 @@ export function reply(raw: string, ctx: VeeContext): Block[] {
 
   /* Honest fallback */
   session.missed = true;
-  return [text(`I'm not sure I got that one${who(ctx)}, and I'd rather ask than guess. Try me with a category ("seamless leggings"), an activity ("something for the gym"), a colour, or a budget.`, "If it's an order question, the team is on WhatsApp."), team];
+  return [
+    text(
+      `I'm not sure I caught that one${who(ctx)}, and I'd rather ask than guess. Try me with a category ("seamless leggings"), an activity ("something for the gym"), a colour, or a budget.`,
+      "Or chat directly with our team on WhatsApp:"
+    ),
+    whatsappBlock(
+      "Chat with Admin on WhatsApp",
+      "Direct line to our Kampala studio team",
+      `Hi QVfits team, I was asking Vee: "${raw.slice(0, 100)}" and would love some help.`,
+      s.whatsapp
+    ),
+  ];
 }

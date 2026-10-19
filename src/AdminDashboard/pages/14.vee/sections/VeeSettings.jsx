@@ -36,6 +36,12 @@ function Editor({ doc }) {
         <Panel title="The assistant">
           <div className="grid gap-4">
             <Toggle checked={draft.enabled} onChange={(enabled) => set("enabled", enabled)} label="Showing on the shop" hint="Off removes her button from every page." />
+            <Toggle
+              checked={draft.whatsappHandover ?? true}
+              onChange={(val) => set("whatsappHandover", val)}
+              label="WhatsApp human handoff"
+              hint="Shows a 'Talk to Human' WhatsApp button in Vee's chat header and when shoppers ask to speak to a person or when Vee is unsure."
+            />
             <Field label="Name" className="max-w-xs" value={draft.name} onChange={(e) => set("name", e.target.value)} />
             <Field label="Greeting" as="textarea" rows={2} value={draft.greeting} onChange={(e) => set("greeting", e.target.value)} hint="Her first message. Once a shopper has told her their name she greets them by it instead." />
           </div>

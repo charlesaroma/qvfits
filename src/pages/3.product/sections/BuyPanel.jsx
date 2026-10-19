@@ -7,7 +7,9 @@ import PriceTag from "@/components/storefront/PriceTag";
 import { useCart } from "@/store/context/CartContext";
 import { useWishlist } from "@/store/context/WishlistContext";
 import { notify } from "@/store/tanstackStore/notices";
-import { useFacets } from "@/store/tanstackStore/queries/site";
+import { useFacets, useSettings } from "@/store/tanstackStore/queries/site";
+import { WhatsAppIcon } from "@/components/ui/BrandIcons";
+import { whatsappLink } from "@/utils/whatsapp";
 import { cn } from "@/utils/cn";
 import { anyInStock, forColor, inStock, productSizes } from "@/utils/stockLevel";
 import ColorPicker from "./ColorPicker";
@@ -19,6 +21,7 @@ import SizePicker from "./SizePicker";
 // tap adds to the bag. Sizes show the stock of the colour picked.
 export default function BuyPanel({ product: p }) {
   const { data: facets } = useFacets();
+  const { data: settings } = useSettings();
   const idOf = (name) => facets?.colors.find((c) => c.name === name)?.id;
   const [color, setColor] = useState(() => p.colors.find((c) => anyInStock(forColor(p, idOf(c)))) ?? p.colors[0]);
   const shown = forColor(p, idOf(color));
@@ -55,7 +58,17 @@ export default function BuyPanel({ product: p }) {
       <h1 className="mt-1 mb-0 text-[clamp(1.6rem,3.2vw,2.2rem)]">{p.name}</h1>
       <div className="pdp__price"><PriceTag product={p} /></div>
       <p className="lede text-base">{p.blurb}</p>
-      {sold && <div className="pill-note bg-brand-100 text-brand-600">Fully sold out right now. Ask us on WhatsApp whether it&apos;s coming back.</div>}
+      {sold && (
+        <a
+          href={whatsappLink(settings?.whatsapp || "256758981959", `Hi QV team, is the ${p.name} in ${color} restocking soon?`)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="pill-note my-2 inline-flex items-center gap-2 rounded-r-md border border-[#c9eed3] bg-[#f4faf5] px-3.5 py-2 text-sm text-[#0e5e2b] transition-all hover:bg-[#e6f7eb]"
+        >
+          <WhatsAppIcon className="h-4 w-4 shrink-0 text-[#25D366]" />
+          <span>Sold out right now. <strong>Ask our team on WhatsApp about restocks →</strong></span>
+        </a>
+      )}
 
       <ColorPicker colors={p.colors} chosen={color} onChoose={chooseColor} swatch={swatch} />
       <div ref={sizes}>

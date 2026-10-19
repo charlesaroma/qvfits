@@ -59,15 +59,27 @@ export function outfitReply(ctx: VeeContext, ask: OutfitAsk & { subjectId?: stri
   session.lastAsk = { subjectId: subject?.id ?? null, movement: ask.movement ?? null, budget: ask.budget ?? null, colors: ask.colors ?? [], prefer: ask.prefer ?? null, total };
 
   if (!kits.length && !custom.length) {
-    return [text(`${say(ctx, "none")}${ask.budget ? ` Try a budget above ${ugx(ask.budget)}, or another colour.` : ""}`), chips("Another colour", "A bigger budget", "For the gym", "For swimming")];
+    const colName = ask.colors?.[0];
+    return [
+      text(
+        colName
+          ? `I couldn't find a full in-stock outfit in ${colName} right now${who(ctx)}. You can try another colour, or browse individual ${colName} pieces in the shop.`
+          : `${say(ctx, "none")}${ask.budget ? ` Try a budget above ${ugx(ask.budget)}, or another colour.` : ""}`
+      ),
+      chips(colName && colName.toLowerCase() !== "black" ? "In Black" : "In White", "Another colour", "For the gym", "Talk to a human"),
+    ];
   }
 
   const out: Block[] = [];
+  const colName = ask.colors?.[0];
   if (kits.length) {
     out.push(text(say(ctx, "kitIntro")), ...kits.map(outfitBlock));
     if (custom.length) out.push(text(say(ctx, "customIntro")));
   } else {
-    out.push(text(`${say(ctx, "outfitIntro")}${subject ? ` (built around the ${subject.name})` : ""}`));
+    const intro = colName
+      ? `Here's what I've styled in ${colName} for you${who(ctx)}:`
+      : `${say(ctx, "outfitIntro")}${subject ? ` (built around the ${subject.name})` : ""}`;
+    out.push(text(intro));
   }
   // Asked for bolder or calmer but the colour rules allow nothing further that way: say so, rather than repeat the same looks silently.
   const leaning = ask.prefer === "contrast" ? ["contrast", "pop"] : ask.prefer === "neutral" ? ["neutral", "tonal"] : null;
@@ -77,7 +89,12 @@ export function outfitReply(ctx: VeeContext, ask: OutfitAsk & { subjectId?: stri
   out.push(...custom.map(outfitBlock));
   // Her size makes every piece shown one she can actually buy; ask once if she has not said.
   if (!session.size) out.push(text(`I have shown what is in stock${who(ctx)}. Tell me your size ("I'm a M") and I will only show pieces in it.`));
-  out.push(chips("Something bolder", "Something calmer", ask.budget ? "Cheaper" : "Under 200k", session.size ? "For swimming" : "What size am I?"));
+
+  const chipOptions: string[] = [];
+  if (colName && colName.toLowerCase() !== "black") chipOptions.push("In Black");
+  if (colName && colName.toLowerCase() !== "white") chipOptions.push("In White");
+  chipOptions.push("Something bolder", "For the gym", ask.budget ? "Cheaper" : "Under 200k");
+  out.push(chips(...chipOptions.slice(0, 4)));
   return out;
 }
 

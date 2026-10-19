@@ -95,6 +95,7 @@ const MOOD_TITLE: Record<Mood, string> = { tonal: "Tonal", neutral: "All neutral
  */
 export function kitOutfits(ctx: VeeContext, ask: OutfitAsk): Outfit[] {
   const size = ctx.session.size;
+  const wanted = (ask.colors ?? []).map((c) => c.toLowerCase());
   const out: Outfit[] = [];
   for (const look of ctx.looks) {
     const pieces = look.items.map((id) => ctx.products.find((p) => p.id === id)).filter((p): p is Product => Boolean(p));
@@ -103,11 +104,20 @@ export function kitOutfits(ctx: VeeContext, ask: OutfitAsk): Outfit[] {
     if (!fits || (ask.budget && look.price > ask.budget)) continue;
     const chosen: OutfitPiece[] = [];
     for (const p of pieces) {
-      const way = colourways(p, size)[0];
+      const ways = colourways(p, size);
+      if (wanted.length) {
+        const match = ways.find((w) => wanted.includes(w.color.toLowerCase()));
+        if (match) {
+          chosen.push({ product: p, ...match });
+          continue;
+        }
+      }
+      const way = ways[0];
       if (!way) break;
       chosen.push({ product: p, ...way });
     }
     if (chosen.length !== pieces.length) continue;
+    if (wanted.length && !chosen.some((pc) => wanted.includes(pc.color.toLowerCase()))) continue;
     out.push({ kind: "kit", title: look.title, reason: look.note, pieces: chosen, total: look.price, saves: Math.max(0, look.separate - look.price), kitId: look.id, score: 100 });
   }
   return out.slice(0, 1);
@@ -129,14 +139,38 @@ export function customOutfits(ctx: VeeContext, ask: OutfitAsk, limit = 3): Outfi
 
   // Candidates per slot: in stock, of the right category, preferring her activity, bestsellers first.
   const mov = ask.movement ?? subject?.termIds.find((t) => ctx.movements.some((m) => m.id === t)) ?? null;
+  const wanted = (ask.colors ?? []).map((c) => c.toLowerCase());
+
   const lists = slots.map((cats) => {
     let pool = ctx.products.filter((p) => p.type !== "kit" && cats.includes(p.category) && p.id !== subject?.id && colourways(p, size).length);
     const inMove = mov ? pool.filter((p) => p.termIds.includes(mov)) : [];
     if (inMove.length) pool = inMove;
+
+    // When a specific colour is wanted, prioritize pieces available in that colour
+    if (wanted.length) {
+      pool.sort((a, b) => {
+        const aHas = colourways(a, size).some((w) => wanted.includes(w.color.toLowerCase()));
+        const bHas = colourways(b, size).some((w) => wanted.includes(w.color.toLowerCase()));
+        if (aHas !== bHas) return aHas ? -1 : 1;
+        return Number(b.isBestseller) - Number(a.isBestseller) || a.price - b.price;
+      });
+    } else {
+      pool.sort((a, b) => Number(b.isBestseller) - Number(a.isBestseller) || a.price - b.price);
+    }
+
     return pool
-      .sort((a, b) => Number(b.isBestseller) - Number(a.isBestseller) || a.price - b.price)
-      .slice(0, 5)
-      .flatMap((p) => colourways(p, size).map((w) => ({ product: p, ...w })));
+      .slice(0, 8)
+      .flatMap((p) => {
+        const ways = colourways(p, size);
+        if (wanted.length) {
+          ways.sort((a, b) => {
+            const aW = wanted.includes(a.color.toLowerCase());
+            const bW = wanted.includes(b.color.toLowerCase());
+            return aW === bW ? 0 : aW ? -1 : 1;
+          });
+        }
+        return ways.map((w) => ({ product: p, ...w }));
+      });
   });
   if (lists.some((l) => !l.length)) return [];
 
@@ -145,7 +179,6 @@ export function customOutfits(ctx: VeeContext, ask: OutfitAsk, limit = 3): Outfi
   if (subject && ask.baseColor) ways = ways.filter((w) => w.color.toLowerCase() === ask.baseColor!.toLowerCase()).length ? ways.filter((w) => w.color.toLowerCase() === ask.baseColor!.toLowerCase()) : ways;
   const bases: OutfitPiece[][] = subject ? ways.map((w) => [{ product: subject, ...w }]) : [[]];
   if (subject && !bases.length) return [];
-  const wanted = (ask.colors ?? []).map((c) => c.toLowerCase());
 
   const found: Outfit[] = [];
   const walk = (i: number, so: OutfitPiece[]) => {
@@ -158,11 +191,30 @@ export function customOutfits(ctx: VeeContext, ask: OutfitAsk, limit = 3): Outfi
       if (ask.budget && total > ask.budget) return;
       const c = outfitColour(tn, rules);
       if (!c.ok) return;
-      const asked = wanted.length && so.some((p) => wanted.includes(p.color.toLowerCase())) ? 1.5 : 0;
+
+      const countWanted = wanted.length ? so.filter((p) => wanted.includes(p.color.toLowerCase())).length : 0;
+      const allWanted = wanted.length > 0 && countWanted === so.length;
+      const anyWanted = countWanted > 0;
+
+      // When a shopper explicitly asks for a colour (e.g. black, white):
+      // - Head-to-toe match gets highest priority (+35)
+      // - Partial match gets a solid boost (+15)
+      // - Non-matching outfits are heavily penalized (-25) so they don't drown out the requested colour
+      const askedBonus = allWanted ? 35 : anyWanted ? 15 : wanted.length ? -25 : 0;
       const inMove = mov ? so.filter((p) => p.product.termIds.includes(mov)).length * 0.4 : 0;
       const sellers = so.filter((p) => p.product.isBestseller).length * 0.3;
       const leaning = ask.prefer && (c.mood === ask.prefer || (ask.prefer === "neutral" && c.mood === "tonal") || (ask.prefer === "contrast" && c.mood === "pop")) ? 2 : 0;
-      found.push({ kind: c.mood, title: MOOD_TITLE[c.mood], reason: c.reason, pieces: so, total, score: c.score * 10 + asked + inMove + sellers + leaning });
+
+      let title = MOOD_TITLE[c.mood];
+      let reason = c.reason;
+      if (allWanted && ask.colors?.[0]) {
+        title = `All ${ask.colors[0]}`;
+        reason = `Head to toe ${ask.colors[0].toLowerCase()} · Timeless, sleek and versatile`;
+      } else if (anyWanted && ask.colors?.[0] && c.mood === "contrast") {
+        title = `${ask.colors[0]} Contrast`;
+      }
+
+      found.push({ kind: c.mood, title, reason, pieces: so, total, score: c.score * 10 + askedBonus + inMove + sellers + leaning });
       return;
     }
     for (const cand of lists[i]) walk(i + 1, [...so, cand]);
@@ -175,13 +227,25 @@ export function customOutfits(ctx: VeeContext, ask: OutfitAsk, limit = 3): Outfi
   const used = new Set<string>();
   const sig = (o: Outfit) => o.pieces.map((p) => `${p.product.id}:${p.colorId}`).join("|");
   const share = (o: Outfit) => o.pieces.map((p) => p.product.id).join("|");
-  for (const mood of ["pop", "tonal", "neutral", "contrast"] as Mood[]) {
-    const best = found.find((o) => o.kind === mood && !used.has(share(o)));
-    if (best && picked.length < limit) { picked.push(best); used.add(share(best)); }
-  }
-  for (const o of found) {
-    if (picked.length >= limit) break;
-    if (!picked.some((p) => sig(p) === sig(o)) && !used.has(share(o))) { picked.push(o); used.add(share(o)); }
+
+  if (wanted.length) {
+    // When a colour is requested, prioritize the top outfits that feature the requested colour
+    for (const o of found) {
+      if (picked.length >= limit) break;
+      if (!picked.some((p) => sig(p) === sig(o)) && !used.has(share(o))) {
+        picked.push(o);
+        used.add(share(o));
+      }
+    }
+  } else {
+    for (const mood of ["pop", "tonal", "neutral", "contrast"] as Mood[]) {
+      const best = found.find((o) => o.kind === mood && !used.has(share(o)));
+      if (best && picked.length < limit) { picked.push(best); used.add(share(best)); }
+    }
+    for (const o of found) {
+      if (picked.length >= limit) break;
+      if (!picked.some((p) => sig(p) === sig(o)) && !used.has(share(o))) { picked.push(o); used.add(share(o)); }
+    }
   }
   return picked.sort((a, b) => b.score - a.score);
 }

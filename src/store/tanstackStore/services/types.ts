@@ -300,6 +300,7 @@ export interface ShopSettings {
   assistant: {
     endpoint: string | null;
     enabled: boolean;
+    whatsappHandover?: boolean;
     name: string;
     greeting: string;
     chips: string[];

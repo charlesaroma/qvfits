@@ -8,16 +8,22 @@ export type Block =
   | { type: "text"; paras: string[] }
   | { type: "cards"; products: Product[] }
   | { type: "link"; label: string; to: string; external?: boolean }
-  /** An outfit: pieces in their colours and sizes, why it works, and one tap to add it all. */
   | { type: "outfit"; outfit: Outfit }
-  /** One-tap replies shown under the latest message. */
-  | { type: "chips"; options: string[] };
+  | { type: "chips"; options: string[] }
+  | { type: "whatsapp"; label: string; note?: string; message?: string; phone?: string };
 
 export const text = (...paras: string[]): Block => ({ type: "text", paras: paras.filter(Boolean) });
 export const cards = (products: Product[]): Block => ({ type: "cards", products });
 export const outfitBlock = (outfit: Outfit): Block => ({ type: "outfit", outfit });
 export const chips = (...options: string[]): Block => ({ type: "chips", options: options.filter(Boolean).slice(0, 4) });
 export const link = (label: string, to: string, external = false): Block => ({ type: "link", label, to, external });
+export const whatsappBlock = (label = "Chat with Admin on WhatsApp", note?: string, message?: string, phone?: string): Block => ({
+  type: "whatsapp",
+  label,
+  note,
+  message,
+  phone,
+});
 
 /** Vee quotes prices in shillings: the shop settles in UGX. */
 export const ugx = (n: number) => formatIn({ code: "UGX", perUGX: 1, decimals: 0, display: "code" }, n);

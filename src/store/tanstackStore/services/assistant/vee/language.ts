@@ -26,6 +26,7 @@ const MOVEMENT_WORDS: Record<string, string[]> = {
 const COLOR_ALIASES: Record<string, string> = {
   green: "Teal", emerald: "Teal", "dark green": "Forest", beige: "Sand", nude: "Sand", tan: "Mocha", brown: "Mocha",
   yellow: "Butter", grey: "Slate", gray: "Slate", khaki: "Olive", "off white": "Ivory", neutral: "Sand",
+  monochrome: "Black",
 };
 
 export const has = (t: string, arr: string[]) => arr.some((w) => t.includes(w));

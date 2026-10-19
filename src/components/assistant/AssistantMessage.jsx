@@ -6,15 +6,18 @@ import OutfitCard from "@/components/storefront/OutfitCard";
 import Photo from "@/components/storefront/Photo";
 import { useCurrency } from "@/store/context/CurrencyContext";
 import { anyInStock } from "@/utils/stockLevel";
+import { WhatsAppIcon } from "@/components/ui/BrandIcons";
+import { whatsappLink } from "@/utils/whatsapp";
+import { useSettings } from "@/store/tanstackStore/queries/site";
 
 /**
- * One turn of the chat. Vee's replies are blocks: paragraphs, product cards
- * and links, never raw HTML. `onLeave` closes the panel when a link is followed.
- * An outfit is a card of pieces with its reason and one button that adds every
- * piece in the colour and size shown; quick replies run only on the newest message.
+ * One turn of the chat. Vee's replies are blocks: paragraphs, product cards,
+ * WhatsApp contact buttons and links, never raw HTML. `onLeave` closes the panel
+ * when a link is followed.
  */
 export default function AssistantMessage({ message, onLeave, onAsk, isLast }) {
   const { money } = useCurrency();
+  const { data: settings } = useSettings();
   if (message.from === "me") return <div className="msg msg--me">{message.text}</div>;
 
   return message.blocks.map((b, i) => {
@@ -44,6 +47,31 @@ export default function AssistantMessage({ message, onLeave, onAsk, isLast }) {
       return (
         <div key={i} className="asst__quick" role="group" aria-label="Quick replies">
           {b.options.map((c) => <button key={c} type="button" onClick={() => onAsk(c)}>{c}</button>)}
+        </div>
+      );
+    }
+    if (b.type === "whatsapp") {
+      const waNumber = b.phone || settings?.whatsapp || "256758981959";
+      const href = whatsappLink(waNumber, b.message || "Hi QVfits team, I was chatting with Vee and would like to speak to a person.");
+      return (
+        <div key={i} className="asst-wa-wrap my-1.5">
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="asst-wa-card"
+            onClick={onLeave}
+            aria-label={`${b.label}. Opens WhatsApp in a new tab.`}
+          >
+            <div className="asst-wa-card__icon" aria-hidden="true">
+              <WhatsAppIcon className="h-5 w-5" />
+            </div>
+            <div className="asst-wa-card__content">
+              <strong>{b.label}</strong>
+              <small>{b.note || "Typically replies in minutes · WhatsApp"}</small>
+            </div>
+            <ArrowRight className="asst-wa-card__arrow h-4 w-4" aria-hidden="true" />
+          </a>
         </div>
       );
     }

@@ -121,7 +121,7 @@ Only `transform` and `opacity` animate. `MotionConfig reducedMotion="user"` and 
 
 ## Footer
 
-A deep plum panel mixed from the brand's own purple (no new colour), `components/layout/Footer.jsx`. The newsletter leads (large "First to know", a white pill form); then the logo (`tone="dark"` swaps in the white artwork) with its social buttons in a row, the Shop and Help columns, and Visit us with an icon per line. Legal links sit in the bottom bar, and Delivery and Returns appear once, under Help. A huge faint QVFITS bleeds off the bottom edge. On a phone everything is centred and link rows are 40px.
+The old light background (white with one hairline above; the client does not want the purple one), `components/layout/Footer.jsx`. The newsletter leads (large "First to know" and a pill form); then the logo with its social buttons in a row, the Shop and Help columns, and Visit us with an icon per line. Legal links sit in the bottom bar, and Delivery and Returns appear once, under Help. On a phone everything is centred and link rows are 40px.
 
 ## Vee
 

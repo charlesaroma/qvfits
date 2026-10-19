@@ -12,11 +12,11 @@ import NewsletterForm from "@/components/storefront/NewsletterForm";
 import Logo from "./navbar/Logo";
 
 /**
- * A deep plum panel in the brand's own colours. The newsletter leads, large
+ * On the light background the client prefers (white, one hairline above). The newsletter leads, large
  * and plain; then the logo with its social buttons, the shop and help links,
  * and the showroom with an icon per line; legal links sit in the bottom bar
  * (they were a column of their own, and repeated Delivery and Returns from
- * Help). A huge faint QVFITS bleeds off the bottom edge.
+ * Help).
  */
 export default function Footer() {
   const { data: settings } = useSettings();
@@ -30,7 +30,7 @@ export default function Footer() {
   const legal = nav?.legal.filter((l) => !help.some((h) => h.href === l.href)) ?? [];
 
   return (
-    <footer className="ftr ftr--dark">
+    <footer className="ftr ftr--light">
       <div className="wrap">
         {/* Newsletter: the words large on the left, the form on the right */}
         <section className="ftr__join" aria-labelledby="ftr-news-title">
@@ -39,13 +39,13 @@ export default function Footer() {
             <h2 id="ftr-news-title" className="ftr__headline">{copy?.newsTitle}</h2>
             <p className="ftr__lede">{copy?.newsText}</p>
           </div>
-          <NewsletterForm source="footer" cta={copy?.newsCta} tone="brand" />
+          <NewsletterForm source="footer" cta={copy?.newsCta} />
         </section>
 
         <div className="ftr__grid">
           {/* Brand */}
           <div className="ftr__brand">
-            <Logo size="lg" tone="dark" className="mb-[16px]" />
+            <Logo size="lg" className="mb-[16px]" />
             {settings && <p className="ftr__blurb">{settings.blurb} {copy?.blurbSuffix}</p>}
             {/* Social: the shop's real accounts, as round icon buttons side by side */}
             {settings && (
@@ -100,8 +100,6 @@ export default function Footer() {
           <span>{copy?.tagline}</span>
         </div>
       </div>
-      {/* The wordmark, huge and faint, cut off by the bottom edge */}
-      <span className="ftr__mark" aria-hidden="true">QVFITS</span>
     </footer>
   );
 }
